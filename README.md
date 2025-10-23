@@ -1,3 +1,72 @@
+🧩 Proyecto: Desarollo Movies v3
+
+Este proyecto está estructurado como un monorepo utilizando Turborepo, e integra una aplicación principal en Next.js 16 con soporte para TypeScript, TailwindCSS v4 y shadcn/ui.
+Está pensado para escalar fácilmente con múltiples apps y librerías compartidas.
+
+📁 Estructura del Proyecto
+my-turborepo/
+│
+├── apps/                       # Aplicaciones principales
+│   ├── web/                    # App web principal (Next.js 16 + Tailwind + shadcn)
+│   │   ├── src/
+│   │   │   ├── app/            # Rutas, layout y páginas del App Router
+│   │   │   └── lib/            # Utilidades internas (utils.ts, etc.)
+│   │   ├── public/             # Archivos estáticos (íconos, imágenes, etc.)
+│   │   ├── components.json     # Configuración de shadcn/ui
+│   │   ├── postcss.config.mjs  # Configuración de PostCSS
+│   │   ├── tailwind.config.ts  # Configuración de TailwindCSS
+│   │   ├── next.config.ts      # Configuración de Next.js
+│   │   ├── package.json
+│   │   └── tsconfig.json
+│   │
+│   └── docs/                   # App de documentación (por defecto en Turborepo)
+│
+├── packages/                   # Librerías compartidas
+│   ├── eslint-config/          # Reglas ESLint compartidas
+│   ├── typescript-config/      # Configuración TypeScript compartida
+│   └── ui/                     # Componentes UI reutilizables (si se agregan)
+│
+├── .env.example                # Variables de entorno de ejemplo
+├── .env.local                  # Variables locales (no subidas al repo)
+├── pnpm-lock.yaml              # Lockfile del gestor de paquetes PNPM
+├── turbo.json                  # Configuración del Turborepo
+└── package.json
+
+⚙️ Tecnologías principales
+Herramienta / Framework	Versión	Propósito
+Turborepo	2.5.8	Monorepo manager
+Next.js	16.0.0	Framework React para la app web
+React	19.x	Librería base de la UI
+TailwindCSS	4.1.16	Estilos utilitarios
+shadcn/ui (canary)	—	Componentes UI accesibles y tipados
+TypeScript	5.9.x	Tipado estático
+PNPM	—	Gestor de dependencias
+ESLint + Prettier	—	Linting y formato del código
+🚀 Scripts principales
+
+Desde la raíz del proyecto:
+
+# Instalar dependencias
+pnpm install
+
+# Correr todas las apps en modo desarrollo
+pnpm run dev
+
+# Compilar todas las apps
+pnpm run build
+
+# Linter global
+pnpm run lint
+
+
+Para correr solo la app web:
+
+cd apps/web
+pnpm run dev
+
+
+
+
 # Turborepo starter
 
 This Turborepo starter is maintained by the Turborepo core team.
