@@ -6,7 +6,7 @@ Está pensado para escalar fácilmente con múltiples apps y librerías comparti
 ---
 
 ## 📁 Estructura del Proyecto
-
+```
 my-turborepo/
 │
 ├── apps/ # Aplicaciones principales
@@ -35,13 +35,13 @@ my-turborepo/
 ├── turbo.json # Configuración del Turborepo
 └── package.json
 
-yaml
-Copiar código
+```
+
 
 ---
 
 ## ⚙️ Tecnologías principales
-
+```
 | Herramienta / Framework | Versión | Propósito |
 |--------------------------|----------|------------|
 | **Turborepo** | 2.5.8 | Monorepo manager |
@@ -52,7 +52,7 @@ Copiar código
 | **TypeScript** | 5.9.x | Tipado estático |
 | **PNPM** | — | Gestor de dependencias |
 | **ESLint + Prettier** | — | Linting y formato del código |
-
+```
 ---
 
 ## 🚀 Scripts principales
