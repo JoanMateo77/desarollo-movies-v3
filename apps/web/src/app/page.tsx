@@ -1,118 +1,29 @@
-"use client";
+/**
+* Home Page
+*
+* Página principal de la aplicación.
+* Muestra el componente de búsqueda de películas.
+*
+* ARQUITECTURA: Client Component que coordina la UI principal.
+*/
 
-import { useState } from "react";
+"use client"
 
-export default function Page() {
-  const [data, setData] = useState<unknown | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+import { MovieSearch } from "@/components/movie-search"
 
-  function safeStringify(obj: unknown): string {
-    try {
-      const seen = new WeakSet();
-      return JSON.stringify(
-        obj,
-        (_key, value) => {
-          if (typeof value === "object" && value !== null) {
-            if (seen.has(value)) return "[Circular]";
-            seen.add(value);
-          }
-          if (typeof value === "bigint") return value.toString();
-          return value;
-        },
-        2
-      );
-    } catch {
-      return String(obj);
-    }
-  }
+export default function HomePage() {
+return (
+<div className="container mx-auto max-w-7xl px-4 py-8">
+{/* Header */}
+<header className="mb-8">
+<h1 className="mb-2 text-4xl font-bold text-balance">Explorador de Películas</h1>
+<p className="text-lg text-muted-foreground text-pretty">
+Busca y descubre información sobre tus películas y series favoritas
+</p>
+</header>
 
-  async function handleFetch() {
-    setLoading(true);
-    setError(null);
-    setData(null);
-
-    try {
-      const inputObj = { castId: "nm0000190" }; // cambia por otro ID si quieres
-      const url =
-        "/api/trpc/movies.getCastTitles?input=" +
-        encodeURIComponent(JSON.stringify(inputObj));
-
-      const res = await fetch(url);
-
-      if (!res.ok) {
-        const txt = await res.text().catch(() => "No body");
-        throw new Error(`HTTP ${res.status}: ${txt}`);
-      }
-
-      // leer como texto e intentar parsear JSON
-      const text = await res.text();
-      let parsed: unknown;
-      try {
-        parsed = JSON.parse(text);
-      } catch {
-        parsed = text;
-      }
-
-      // Adaptaciones comunes de tRPC/Next/standalone: busca result.data, data o la respuesta directa
-      const payload =
-        (parsed && typeof parsed === "object" && (parsed as any).result?.data) ??
-        (parsed && typeof parsed === "object" && (parsed as any).data) ??
-        parsed;
-
-      setData(payload);
-    } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : String(err);
-      console.error("Fetch error:", message);
-      setError(message);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  // Prepara el string que se pasará al <pre> (garantizado string | null)
-  const rendered: string | null =
-    data === null ? null : typeof data === "string" ? data : safeStringify(data);
-
-  return (
-    <main className="p-6">
-      <h1 className="text-xl font-semibold mb-4">🎬 IMDb API con tRPC — Prueba</h1>
-
-      <div className="flex gap-2 items-center mb-4">
-        <button
-          onClick={handleFetch}
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
-          disabled={loading}
-        >
-          {loading ? "Cargando..." : "Obtener títulos de actor"}
-        </button>
-
-        <button
-          onClick={() => {
-            setData(null);
-            setError(null);
-          }}
-          className="px-3 py-1 border rounded text-sm"
-        >
-          Limpiar
-        </button>
-      </div>
-
-      {error && (
-        <div className="mt-4 text-red-600">
-          <strong>Error:</strong> {error}
-        </div>
-      )}
-
-      {!loading && !error && rendered === null && (
-        <div className="mt-4 text-gray-600">Sin datos. Haz clic en Obtener títulos de actor.</div>
-      )}
-
-      {rendered && (
-        <pre className="mt-4 bg-gray-100 p-4 rounded-lg text-sm overflow-x-auto">
-          {rendered}
-        </pre>
-      )}
-    </main>
-  );
+{/* Componente principal de búsqueda */}
+<MovieSearch />
+</div>
+)
 }
