@@ -73,22 +73,24 @@ export default function MovieDetailPage({ params }: MovieDetailPageProps) {
 
       <div className="grid gap-8 lg:grid-cols-[300px_1fr]">
         {/* Poster */}
-        <div className="relative aspect-[2/3] overflow-hidden rounded-lg bg-muted lg:sticky lg:top-8 lg:self-start">
-          {movie.poster ? (
-            <Image
-              src={movie.poster || "/placeholder.svg"}
-              alt={movie.title}
-              fill
-              className="object-cover"
-              priority
-              sizes="(max-width: 1024px) 100vw, 300px"
-            />
-          ) : (
-            <div className="flex size-full items-center justify-center">
-              <Film className="size-24 text-muted-foreground" />
-            </div>
-          )}
+       <div className="relative lg:top-8 lg:self-start lg:col-span-1 aspect-[2/3] overflow-hidden rounded-lg bg-muted">
+            {movie.poster ? (
+              <Image
+                src={movie.poster || "/placeholder.svg"}
+                alt={movie.title}
+                fill
+                className="object-cover"
+                priority
+                
+                sizes="(max-width: 1024px) 100vw, 300px"
+              />
+                ) : (
+              <div className="flex size-full items-center justify-center">
+                <Film className="size-24 text-muted-foreground" />
+              </div>
+            )}
         </div>
+
 
         {/* Información detallada */}
         <div className="space-y-6">

@@ -7,6 +7,15 @@
  *
  * VENTAJA: Type-safety completo entre cliente y servidor sin código duplicado.
  */
+/**
+ * apps/web/src/server/trpc.ts
+ * tRPC Configuration
+ *
+ * Configuración base de tRPC para crear una API tipada end-to-end.
+ * Define el contexto, middleware y utilidades para crear routers.
+ *
+ * VENTAJA: Type-safety completo entre cliente y servidor sin código duplicado.
+ */
 
 import { initTRPC } from "@trpc/server"
 import { ZodError } from "zod"
@@ -60,5 +69,3 @@ export const loggedProcedure = publicProcedure.use(loggerMiddleware)
 
 // Exporta los helpers que usarás en tus routers
 export const createTRPCRouter = t.router
-
-
