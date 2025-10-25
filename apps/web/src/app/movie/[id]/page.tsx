@@ -35,7 +35,7 @@ export default function MovieDetailPage({ params }: MovieDetailPageProps) {
     isLoading,
     error,
     refetch,
-  } = trpc.movies.getDetail.useQuery(
+  } = trpc.movies.getMovieDetail.useQuery(
     { id },
     {
       // Retry automático en caso de error

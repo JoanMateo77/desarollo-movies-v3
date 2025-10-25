@@ -8,6 +8,8 @@
  */
 
 // apps/web/src/lib/types.ts
+// apps/web/src/lib/types.ts
+// apps/web/src/lib/types.ts
 import { z } from "zod"
 
 export const movieSchema = z.object({
@@ -23,31 +25,37 @@ export const movieSchema = z.object({
   rating: z.string().optional(),
   runtime: z.string().optional(),
   released: z.string().optional(),
+  trailer: z.string().optional(),
+  contentRating: z.string().optional(),
+  countriesOfOrigin: z.string().optional(),
+  spokenLanguages: z.string().optional(),
+  filmingLocations: z.string().optional(),
+  productionCompanies: z.string().optional(),
+  budget: z.number().optional(),
+  grossWorldwide: z.number().optional(),
+  numVotes: z.number().optional(),
+  metascore: z.number().optional(),
 })
 
 export type Movie = z.infer<typeof movieSchema>
 
-export const searchMoviesInputSchema = z.object({
-  query: z.string().min(1, "La búsqueda no puede estar vacía").max(100),
-  page: z.number().int().positive().default(1),
-  type: z.enum(["movie", "tvSeries", "tvMovie", "tvMiniSeries", "tvSpecial", "all"]).default("all"), // ✅ ACTUALIZADO
-  minRating: z.number().min(0).max(10).optional(), // ✅ NUEVO
-
+// ✅ NUEVO: Esquemas para Top 250
+export const getTop250InputSchema = z.object({
+  genre: z.string().optional(),
 })
 
-export type SearchMoviesInput = z.infer<typeof searchMoviesInputSchema>
+export type GetTop250Input = z.infer<typeof getTop250InputSchema>
 
+export const getTop250ResponseSchema = z.object({
+  movies: z.array(movieSchema),
+  totalResults: z.number(),
+})
+
+export type GetTop250Response = z.infer<typeof getTop250ResponseSchema>
+
+// ✅ NUEVO: Esquema para obtener detalles de película individual
 export const getMovieDetailInputSchema = z.object({
   id: z.string().min(1, "ID es requerido"),
 })
 
 export type GetMovieDetailInput = z.infer<typeof getMovieDetailInputSchema>
-
-export const searchMoviesResponseSchema = z.object({
-  movies: z.array(movieSchema),
-  totalResults: z.number(),
-  page: z.number(),
-  hasMore: z.boolean(),
-})
-
-export type SearchMoviesResponse = z.infer<typeof searchMoviesResponseSchema>
