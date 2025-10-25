@@ -31,6 +31,8 @@ export const searchMoviesInputSchema = z.object({
   query: z.string().min(1, "La búsqueda no puede estar vacía").max(100),
   page: z.number().int().positive().default(1),
   type: z.enum(["movie", "tvSeries", "tvMovie", "tvMiniSeries", "tvSpecial", "all"]).default("all"), // ✅ ACTUALIZADO
+  minRating: z.number().min(0).max(10).optional(), // ✅ NUEVO
+
 })
 
 export type SearchMoviesInput = z.infer<typeof searchMoviesInputSchema>

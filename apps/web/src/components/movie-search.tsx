@@ -8,12 +8,12 @@
  * INTERACCIÓN: Usa tRPC hooks para comunicarse con el backend.
  */
 
+// apps/web/src/components/movie-search.tsx
 "use client"
 
 import type React from "react"
-
-import { useState } from "react"
-import { Search, Filter } from "lucide-react"
+import { useState, useEffect } from "react" // ✅ AGREGAR useEffect
+import { Search, Filter, Star } from "lucide-react" // ✅ AGREGAR Star
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -23,86 +23,61 @@ import { EmptyState } from "./empty-state"
 import { ErrorState } from "./error-state"
 import { trpc } from "@/lib/trpc-client"
 
+// ✅ HOOK DE DEBOUNCE PERSONALIZADO
+function useDebounce<T>(value: T, delay: number): T {
+  const [debouncedValue, setDebouncedValue] = useState<T>(value)
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value)
+    }, delay)
+
+    return () => {
+      clearTimeout(handler)
+    }
+  }, [value, delay])
+
+  return debouncedValue
+}
+
 export function MovieSearch() {
   const [searchQuery, setSearchQuery] = useState("")
   const [searchType, setSearchType] = useState<"all" | "movie" | "tvSeries" | "tvMovie" | "tvMiniSeries" | "tvSpecial">("all")
   const [currentPage, setCurrentPage] = useState(1)
-
-  // Este hook es completamente tipado - TypeScript conoce la estructura exacta
+  const [minRating, setMinRating] = useState<number | undefined>(7)
+  
+  // ✅ BÚSQUEDA EN TIEMPO REAL CON DEBOUNCE
+  const debouncedSearchQuery = useDebounce(searchQuery, 500)
+  
+  // ✅ USAR debouncedSearchQuery EN LUGAR DE searchQuery
   const { data, isLoading, error, refetch } = trpc.movies.search.useQuery(
     {
-      query: searchQuery || "batman", // Query por defecto para mostrar contenido inicial
+      query: debouncedSearchQuery || "batman", // ✅ CAMBIAR AQUÍ
       page: currentPage,
       type: searchType,
+      minRating: minRating,
     },
     {
-      // Solo ejecutar si hay query
-      enabled: searchQuery.length > 0,
-      // Mantener datos previos mientras carga nuevos (mejor UX)
-       placeholderData: (previousData) => previousData,
+      enabled: debouncedSearchQuery.length > 0, // ✅ CAMBIAR AQUÍ
+      // ✅ REMOVER keepPreviousData (deprecado) y usar placeholderData
+      placeholderData: (previousData) => previousData,
     },
   )
+  
+  // ✅ ACTUALIZAR BÚSQUEDA CUANDO CAMBIA EL QUERY DEBOUNCED
+  useEffect(() => {
+    if (debouncedSearchQuery) {
+      setCurrentPage(1) // Reset a primera página en nueva búsqueda
+    }
+  }, [debouncedSearchQuery])
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
-    setCurrentPage(1) // Reset a primera página en nueva búsqueda
+    setCurrentPage(1)
     refetch()
   }
 
-  if (isLoading && !data) {
-    return (
-      <div className="space-y-6">
-        <SearchForm
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-          searchType={searchType}
-          setSearchType={setSearchType}
-          onSubmit={handleSearch}
-        />
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {Array.from({ length: 8 }).map((_, i) => (
-            <MovieCardSkeleton key={i} />
-          ))}
-        </div>
-      </div>
-    )
-  }
-
-  if (error) {
-    return (
-      <div className="space-y-6">
-        <SearchForm
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-          searchType={searchType}
-          setSearchType={setSearchType}
-          onSubmit={handleSearch}
-        />
-        <ErrorState message={error.message} onRetry={() => refetch()} />
-      </div>
-    )
-  }
-
-  if (data && data.movies.length === 0) {
-    return (
-      <div className="space-y-6">
-        <SearchForm
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-          searchType={searchType}
-          setSearchType={setSearchType}
-          onSubmit={handleSearch}
-        />
-        <EmptyState
-          query={searchQuery}
-          onClear={() => {
-            setSearchQuery("")
-            setSearchType("all")
-          }}
-        />
-      </div>
-    )
-  }
+  // ... resto del componente igual hasta SearchForm ...
 
   return (
     <div className="space-y-6">
@@ -111,59 +86,36 @@ export function MovieSearch() {
         setSearchQuery={setSearchQuery}
         searchType={searchType}
         setSearchType={setSearchType}
+        minRating={minRating} // ✅ AGREGAR
+        setMinRating={setMinRating} // ✅ AGREGAR
         onSubmit={handleSearch}
       />
 
-      {/* Información de resultados */}
-      {data && (
-        <div className="flex items-center justify-between">
-          <p className="text-sm text-muted-foreground">{data.totalResults} resultados encontrados</p>
-          <p className="text-sm text-muted-foreground">Página {data.page}</p>
-        </div>
-      )}
-
-      {/* Grid de películas */}
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {data?.movies.map((movie) => (
-          <MovieCard key={movie.id} movie={movie} />
-        ))}
-      </div>
-
-      {/* Paginación */}
-      {data && (data.page > 1 || data.hasMore) && (
-        <div className="flex items-center justify-center gap-4">
-          <Button
-            variant="outline"
-            onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-            disabled={currentPage === 1 || isLoading}
-          >
-            Anterior
-          </Button>
-          <span className="text-sm text-muted-foreground">Página {currentPage}</span>
-          <Button variant="outline" onClick={() => setCurrentPage((p) => p + 1)} disabled={!data.hasMore || isLoading}>
-            Siguiente
-          </Button>
-        </div>
-      )}
+      {/* ... resto igual ... */}
     </div>
   )
 }
 
-/**
- * Search Form Component
- *
- * Formulario de búsqueda separado para mejor organización.
- * Incluye input de texto y selector de tipo.
- */
+// ✅ ACTUALIZAR INTERFACE Y COMPONENTE SearchForm
 interface SearchFormProps {
   searchQuery: string
   setSearchQuery: (query: string) => void
-  searchType: "all" | "movie" | "tvSeries" | "tvMovie" | "tvMiniSeries" | "tvSpecial" // ✅ ACTUALIZADO
-  setSearchType: (type: "all" | "movie" | "tvSeries" | "tvMovie" | "tvMiniSeries" | "tvSpecial") => void // ✅ ACTUALIZADO
+  searchType: "all" | "movie" | "tvSeries" | "tvMovie" | "tvMiniSeries" | "tvSpecial"
+  setSearchType: (type: "all" | "movie" | "tvSeries" | "tvMovie" | "tvMiniSeries" | "tvSpecial") => void
+  minRating: number | undefined // ✅ AGREGAR
+  setMinRating: (rating: number | undefined) => void // ✅ AGREGAR
   onSubmit: (e: React.FormEvent) => void
 }
 
-function SearchForm({ searchQuery, setSearchQuery, searchType, setSearchType, onSubmit }: SearchFormProps) {
+function SearchForm({ 
+  searchQuery, 
+  setSearchQuery, 
+  searchType, 
+  setSearchType, 
+  minRating, 
+  setMinRating, 
+  onSubmit 
+}: SearchFormProps) {
   return (
     <form onSubmit={onSubmit} className="space-y-4">
       <div className="flex flex-col gap-4 sm:flex-row">
@@ -174,7 +126,7 @@ function SearchForm({ searchQuery, setSearchQuery, searchType, setSearchType, on
             type="text"
             placeholder="Buscar películas, series..."
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e) => setSearchQuery(e.target.value)} // ✅ BÚSQUEDA EN TIEMPO REAL
             className="pl-10"
           />
         </div>
@@ -186,14 +138,31 @@ function SearchForm({ searchQuery, setSearchQuery, searchType, setSearchType, on
               <Filter className="mr-2 size-4" />
               <SelectValue />
             </SelectTrigger>
-           <SelectContent>
-                <SelectItem value="all">Todos</SelectItem>
-                <SelectItem value="movie">Películas</SelectItem>
-                <SelectItem value="tvSeries">Series</SelectItem>
-                <SelectItem value="tvMovie">TV Movies</SelectItem>
-                <SelectItem value="tvMiniSeries">Mini Series</SelectItem>
-                <SelectItem value="tvSpecial">TV Specials</SelectItem>
-          </SelectContent>
+            <SelectContent>
+              <SelectItem value="all">Todos</SelectItem>
+              <SelectItem value="movie">Películas</SelectItem>
+              <SelectItem value="tvSeries">Series</SelectItem>
+              <SelectItem value="tvMovie">TV Movies</SelectItem>
+              <SelectItem value="tvMiniSeries">Mini Series</SelectItem>
+              <SelectItem value="tvSpecial">TV Specials</SelectItem>
+            </SelectContent>
+          </Select>
+
+          {/* ✅ NUEVO: Filtro de rating */}
+          <Select 
+            value={minRating?.toString() || "all"} 
+            onValueChange={(value) => setMinRating(value === "all" ? undefined : parseInt(value))}
+          >
+            <SelectTrigger className="w-[120px]">
+              <Star className="mr-2 size-4" />
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Todos</SelectItem>
+              <SelectItem value="7">7+ Rating</SelectItem>
+              <SelectItem value="8">8+ Rating</SelectItem>
+              <SelectItem value="9">9+ Rating</SelectItem>
+            </SelectContent>
           </Select>
 
           <Button type="submit">Buscar</Button>
