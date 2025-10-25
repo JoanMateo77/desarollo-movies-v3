@@ -1,4 +1,5 @@
 /**
+ * apps/web/src/app/movie/[id]/movie.tsx
  * Movie Detail Page
  *
  * Página de detalle de película individual.

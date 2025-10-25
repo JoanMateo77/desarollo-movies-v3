@@ -1,4 +1,5 @@
 /**
+ * apps/web/src/app/page.tsx
 * Home Page
 *
 * Página principal de la aplicación.

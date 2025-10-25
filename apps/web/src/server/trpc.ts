@@ -1,4 +1,5 @@
 /**
+ * apps/web/src/server/trpc.ts
  * tRPC Configuration
  *
  * Configuración base de tRPC para crear una API tipada end-to-end.
@@ -10,15 +11,17 @@
 import { initTRPC } from "@trpc/server"
 import { ZodError } from "zod"
 import superjson from "superjson"
+import type { Context } from "@/server/context"
+
 
 /**
  * Contexto de tRPC
  * Información disponible en todos los procedimientos (queries/mutations)
  */
-interface Context {
-  // Aquí se pueden agregar: usuario autenticado, headers, etc.
-  headers?: Headers
-}
+// interface Context {
+//   // Aquí se pueden agregar: usuario autenticado, headers, etc.
+//   headers?: Headers
+// }
 
 const t = initTRPC.context<Context>().create({
   // SuperJSON permite serializar Date, Map, Set, etc.
@@ -54,3 +57,8 @@ export const loggerMiddleware = t.middleware(async ({ path, type, next }) => {
 })
 
 export const loggedProcedure = publicProcedure.use(loggerMiddleware)
+
+// Exporta los helpers que usarás en tus routers
+export const createTRPCRouter = t.router
+
+

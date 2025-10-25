@@ -1,6 +1,6 @@
 /**
  * RapidAPI Client
- *
+ *apps/web/src/lib/api-client.ts
  * Capa de abstracción para consumir la API externa de RapidAPI.
  * Encapsula toda la lógica de HTTP, headers, rate limiting y transformación.
  *

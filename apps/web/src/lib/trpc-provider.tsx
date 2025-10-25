@@ -1,6 +1,7 @@
 /**
  * tRPC Provider
- *
+ * 
+ * 
  * Provider de React que configura tRPC y React Query.
  * Debe envolver toda la aplicación para habilitar los hooks de tRPC.
  *

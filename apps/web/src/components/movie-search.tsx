@@ -25,7 +25,7 @@ import { trpc } from "@/lib/trpc-client"
 
 export function MovieSearch() {
   const [searchQuery, setSearchQuery] = useState("")
-  const [searchType, setSearchType] = useState<"all" | "movie" | "series" | "episode">("all")
+  const [searchType, setSearchType] = useState<"all" | "movie" | "tvSeries" | "tvMovie" | "tvMiniSeries" | "tvSpecial">("all")
   const [currentPage, setCurrentPage] = useState(1)
 
   // Este hook es completamente tipado - TypeScript conoce la estructura exacta
@@ -39,7 +39,7 @@ export function MovieSearch() {
       // Solo ejecutar si hay query
       enabled: searchQuery.length > 0,
       // Mantener datos previos mientras carga nuevos (mejor UX)
-      keepPreviousData: true,
+       placeholderData: (previousData) => previousData,
     },
   )
 
@@ -158,8 +158,8 @@ export function MovieSearch() {
 interface SearchFormProps {
   searchQuery: string
   setSearchQuery: (query: string) => void
-  searchType: "all" | "movie" | "series" | "episode"
-  setSearchType: (type: "all" | "movie" | "series" | "episode") => void
+  searchType: "all" | "movie" | "tvSeries" | "tvMovie" | "tvMiniSeries" | "tvSpecial" // ✅ ACTUALIZADO
+  setSearchType: (type: "all" | "movie" | "tvSeries" | "tvMovie" | "tvMiniSeries" | "tvSpecial") => void // ✅ ACTUALIZADO
   onSubmit: (e: React.FormEvent) => void
 }
 
@@ -186,12 +186,14 @@ function SearchForm({ searchQuery, setSearchQuery, searchType, setSearchType, on
               <Filter className="mr-2 size-4" />
               <SelectValue />
             </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Todos</SelectItem>
-              <SelectItem value="movie">Películas</SelectItem>
-              <SelectItem value="series">Series</SelectItem>
-              <SelectItem value="episode">Episodios</SelectItem>
-            </SelectContent>
+           <SelectContent>
+                <SelectItem value="all">Todos</SelectItem>
+                <SelectItem value="movie">Películas</SelectItem>
+                <SelectItem value="tvSeries">Series</SelectItem>
+                <SelectItem value="tvMovie">TV Movies</SelectItem>
+                <SelectItem value="tvMiniSeries">Mini Series</SelectItem>
+                <SelectItem value="tvSpecial">TV Specials</SelectItem>
+          </SelectContent>
           </Select>
 
           <Button type="submit">Buscar</Button>
