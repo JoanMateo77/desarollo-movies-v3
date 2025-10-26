@@ -184,7 +184,7 @@ GET https://imdb236.p.rapidapi.com/api/imdb/top250-movies
   ## 📸 Capturas y demo
 
   Puedes ver capturas y videos de la app en:
-  [Google Drive - Demo y Screenshots](https://drive.google.com/file/d/1xxEK8DEUD1hjBIu7GLYDXpOiobPHepcL/view?usp=drive_link)
+  [Google Drive - Demo y Screenshots](https://drive.google.com/drive/folders/19W5YGJGuVVl5J8UnzMjy4tObj8Xgq9Nt?usp=sharing)
 
   ---
 
