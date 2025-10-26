@@ -175,8 +175,31 @@ GET https://imdb236.p.rapidapi.com/api/imdb/top250-movies
 
   ---
 
-  ## Estado actual
+  - Arquitectura modular y tipado end-to-end
+  - UI responsiva y optimizada
+  - Caching y manejo básico de errores implementados
 
+  ---
+
+  ## 📸 Capturas y demo
+
+  Puedes ver capturas y videos de la app en:
+  [Google Drive - Demo y Screenshots](https://drive.google.com/file/d/1xxEK8DEUD1hjBIu7GLYDXpOiobPHepcL/view?usp=drive_link)
+
+  ---
+
+  ## ❌ Características no implementadas / Mejoras futuras
+
+  - **Testing avanzado**: Mejorar cobertura, mocks y añadir más tests unitarios/integración. Actualmente existen algunos tests básicos, pero falta ampliar cobertura y robustez.
+  - **CI/CD completo**: Implementar workflows de GitHub Actions para lint, build, test y despliegue automatizado. Vercel cubre el deploy, pero falta pipeline de calidad.
+  - **Router modular**: Separar routers (ej. `search.ts`, `user.ts`) y mejorar la arquitectura para escalar endpoints.
+  - **Filtros avanzados**: Añadir filtros por rating, fecha, tipo, etc. Actualmente solo texto y género.
+  - **Favoritos (persistencia local)**
+  - **Recomendaciones personalizadas**
+  - **i18n / Multilenguaje**
+  - **PWA + offline support**
+
+  ---
   - Arquitectura modular y tipado end-to-end
   - UI responsiva y optimizada
   - Caching y manejo básico de errores implementados
