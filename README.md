@@ -183,7 +183,14 @@ GET https://imdb236.p.rapidapi.com/api/imdb/top250-movies
 
   ---
 
-  ## 📝 Licencia
+  ## � Capturas y demo
+
+  Puedes ver capturas y videos de la app en:
+  [Google Drive - Demo y Screenshots](https://drive.google.com/file/d/1xxEK8DEUD1hjBIu7GLYDXpOiobPHepcL/view?usp=drive_link)
+
+  ---
+
+  ## �📝 Licencia
 
   MIT License
 
