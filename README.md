@@ -290,65 +290,6 @@ class CacheService {
 }
 ```
 
-### 📋 Plan de Implementación Detallado
-
-#### **Semana 1: Reorganización Estructural**
-- [ ] Crear nueva estructura de carpetas
-- [ ] Mover archivos existentes
-- [ ] Actualizar imports y paths
-- [ ] Verificar que todo funcione correctamente
-
-#### **Semana 2: Extracción de Servicios**
-- [ ] Crear `MovieService` con lógica de negocio
-- [ ] Crear `MovieRepository` para acceso a datos
-- [ ] Crear `MovieTransformer` para transformaciones
-- [ ] Migrar router a usar servicios
-
-#### **Semana 3: Custom Hooks**
-- [ ] Crear `useMovies` hook
-- [ ] Crear `useSearch` hook
-- [ ] Crear `useGenres` hook
-- [ ] Migrar componentes a usar hooks
-
-#### **Semana 4: Optimización y Testing**
-- [ ] Implementar cache inteligente
-- [ ] Mejorar manejo de errores
-- [ ] Agregar tests unitarios
-- [ ] Optimizar rendimiento
-
-### 🎯 Métricas de Éxito
-
-#### **Mantenibilidad**
-- ✅ Reducción del 60% en líneas de código por archivo
-- ✅ Separación clara de responsabilidades
-- ✅ Documentación completa de cada capa
-
-#### **Rendimiento**
-- ✅ Tiempo de carga inicial < 2 segundos
-- ✅ Cache hit rate > 80%
-- ✅ Bundle size reducido en 20%
-
-#### **Desarrollador Experience**
-- ✅ Autocompletado mejorado con TypeScript
-- ✅ Tests unitarios con > 80% coverage
-- ✅ Hot reload < 1 segundo
-
-### 🚨 Consideraciones de Seguridad
-
-#### **Variables de Entorno**
-- ✅ Todas las claves de API en variables de entorno
-- ✅ Validación de variables con Zod
-- ✅ No exposición de secretos al cliente
-
-#### **Validación de Datos**
-- ✅ Validación de entrada con Zod schemas
-- ✅ Sanitización de datos de APIs externas
-- ✅ Manejo seguro de errores sin información sensible
-
-#### **Rate Limiting**
-- ✅ Implementación de rate limiting en tRPC
-- ✅ Cache para reducir llamadas a APIs externas
-- ✅ Manejo graceful de límites de API
 
 ## 🚀 Instalación y Configuración
 
@@ -429,14 +370,6 @@ static getRapidApiHeaders() {
 }
 ```
 
-### Variables de Entorno
-
-```env
-# apps/web/.env.local
-RAPIDAPI_KEY=tu_rapidapi_key_aqui
-RAPIDAPI_HOST=imdb236.p.rapidapi.com
-RAPIDAPI_BASE_URL=https://imdb236.p.rapidapi.com/api/imdb
-```
 
 ### Rate Limiting
 
@@ -577,18 +510,6 @@ cd apps/web && pnpm build
 - **Offline Support**: Funcionalidad offline básica
 - **Internationalization**: Soporte para múltiples idiomas
 - **Advanced Search**: Filtros avanzados (año, rating, duración)
-
-## 🤝 Contribución
-
-### Estructura de Commits
-```
-feat: nueva funcionalidad
-fix: corrección de bug
-docs: documentación
-style: formato de código
-refactor: refactorización
-test: pruebas
-```
 
 ### Desarrollo Local
 1. Fork del repositorio
