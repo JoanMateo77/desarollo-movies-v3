@@ -17,9 +17,9 @@ return (
 <div className="container mx-auto max-w-7xl px-4 py-8">
 {/* Header */}
 <header className="mb-8">
-<h1 className="mb-2 text-4xl font-bold text-balance">Explorador de Películas</h1>
+<h1 className="mb-2 text-4xl font-bold text-balance">Explorador de Películas de iMBD</h1>
 <p className="text-lg text-muted-foreground text-pretty">
-Busca y descubre información sobre tus películas y series favoritas
+Busca y descubre información las 250 mejores peliculas segun iMBD y miralas todas en familia
 </p>
 </header>
 
