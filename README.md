@@ -76,324 +76,120 @@ GET https://imdb236.p.rapidapi.com/api/imdb/top250-movies
 
 **Búsqueda en Tiempo Real:**
 - Los datos incluyen múltiples campos de búsqueda:
-  - Título de la película
-  - Nombre del director
-  - Actores principales
-  - Descripción/trama
-- Esto permite implementar búsqueda semántica y flexible
+  # 🎬 Explorador de Películas
 
-#### 4. **Integración Técnica Eficiente**
+  Aplicación web para explorar, buscar y filtrar las mejores **250 películas** según IMDb. Construida con **Next.js + tRPC** y orientada a tipado end-to-end y mantenibilidad.
 
-**RapidAPI como Intermediario:**
-- **RapidAPI** actúa como un marketplace de APIs que simplifica la integración
-- Manejo automático de autenticación y rate limiting
-- Documentación clara y ejemplos de código
-- Soporte técnico y monitoreo de la API
+  ---
 
-**Headers de Autenticación:**
-```http
-x-rapidapi-key: b75695d07emshb035ff8bc7be8a7p19025djsnff2398385c07
-x-rapidapi-host: imdb236.p.rapidapi.com
-```
+  ## 🚀 Resumen rápido (evaluadores)
 
-#### 5. **Rendimiento y Escalabilidad**
+  - Clonar, instalar deps y arrancar:
 
-**Optimizaciones Implementadas:**
-- **Caching**: Los datos se cachean por 1 hora para reducir llamadas a la API
-- **Transformación de Datos**: Los datos se transforman a un formato consistente en el backend
-- **Filtrado del Lado del Cliente**: Una vez obtenidos los datos, el filtrado se realiza localmente para mejor rendimiento
+  ```bash
+  pnpm install
+  pnpm dev
+  ```
 
-#### 6. **Experiencia de Usuario**
+  - Variables mínimas: `RAPIDAPI_KEY`, `RAPIDAPI_HOST` (ver sección "Configuración").
 
-**Datos Ricos para UI:**
-- Posters de alta calidad para una presentación visual atractiva
-- Información detallada que permite crear cards informativas
-- Metadatos que permiten implementar funcionalidades avanzadas como:
-  - Ordenamiento por rating
-  - Filtros múltiples
-  - Búsqueda semántica
+  ---
 
-### Estructura de Datos de la API
+  ## Funcionalidades principales
 
-```typescript
-interface Movie {
-  id: string;                    // ID único de IMDb
-  title: string;                 // Título de la película
-  year: string;                  // Año de lanzamiento
-  type: string;                  // Tipo (movie, series, etc.)
-  poster: string;                // URL del poster
-  plot: string;                  // Descripción/trama
-  director: string;              // Director principal
-  actors: string;                // Actores principales
-  genre: string;                 // Géneros separados por comas
-  rating: string;                // Rating promedio
-  runtime: string;               // Duración en minutos
-  released: string;              // Fecha de lanzamiento
-  trailer: string;               // URL del trailer
-  contentRating: string;         // Clasificación de edad
-  countriesOfOrigin: string;     // Países de origen
-  spokenLanguages: string;       // Idiomas hablados
-  filmingLocations: string;      // Ubicaciones de filmación
-  productionCompanies: string;   // Compañías productoras
-  budget: number;                // Presupuesto
-  grossWorldwide: number;        // Recaudación mundial
-  numVotes: number;              // Número de votos
-  metascore: number;             // Metascore de críticos
-}
-```
+  | Funcionalidad                  | Estado | Descripción breve                                |
+  | ------------------------------ | :----: | ------------------------------------------------ |
+  | Listado Top 250 IMDb           | ✅     | Catálogo completo                                |
+  | Búsqueda en tiempo real        | ✅     | Filtrado por título, director, actores, trama   |
+  | Filtro por género              | ✅     | Géneros normalizados y selección dinámica       |
+  | Página de detalle              | ✅     | Información extendida por película              |
+  | Estados UI (loading/empty)     | ✅     | Skeletons / mensajes de error                    |
 
-## 🏗️ Arquitectura de la Aplicación
+  ---
 
-### 🎯 Principios Arquitectónicos
+  ## 🧱 Stack (resumen)
 
-La aplicación sigue una **arquitectura moderna** con separación clara de responsabilidades:
+  - Frontend: Next.js (App Router), React, TypeScript, Tailwind CSS
+  - Backend: tRPC (routers en `server/`), Zod
+  - Infra: RapidAPI (IMDb), Vercel (deploy), pnpm + Turborepo
 
-1. **Capa de Presentación** (UI Components) - Componentes React con Radix UI
-2. **Capa de Aplicación** (tRPC + React Query) - Comunicación cliente-servidor
-3. **Capa de Servicios** (Business Logic) - Lógica de negocio y transformación de datos
-4. **Capa de Infraestructura** (External APIs) - Integración con RapidAPI/IMDb
-5. **Capa de Datos** (Type Safety) - Tipos compartidos y validación con Zod
+  > Las versiones exactas están en `package.json`.
 
-### 📁 Estructura de Directorios Real
+  ---
 
-```
-apps/web/src/
-├── app/                          # Next.js App Router
-│   ├── api/trpc/[trpc]/         # Endpoints de tRPC
-│   │   └── route.ts             # Handler de tRPC
-│   ├── movie/[id]/              # Página de detalle de película
-│   │   └── page.tsx             # Página individual de película
-│   ├── globals.css              # Estilos globales
-│   ├── layout.tsx               # Layout principal
-│   ├── loading.tsx              # Loading page
-│   └── page.tsx                 # Página principal
-│
-├── components/                   # 🎨 CAPA DE PRESENTACIÓN
-│   ├── ui/                      # Componentes base (Radix UI)
-│   │   ├── alert.tsx            # Componente de alertas
-│   │   ├── badge.tsx            # Badges y etiquetas
-│   │   ├── button.tsx           # Botones
-│   │   ├── card.tsx             # Tarjetas
-│   │   ├── dialog.tsx           # Modales
-│   │   ├── image-with-loading.tsx # Imagen con loading state
-│   │   ├── input.tsx            # Inputs de formulario
-│   │   ├── label.tsx            # Labels
-│   │   ├── select.tsx           # Selectores
-│   │   ├── separator.tsx        # Separadores
-│   │   └── skeleton.tsx         # Loading skeletons
-│   ├── empty-state.tsx          # Estado vacío
-│   ├── error-state.tsx          # Estado de error
-│   ├── movie-card.tsx           # Tarjeta de película
-│   ├── movie-card-skeleton.tsx  # Skeleton de tarjeta
-│   └── movie-search.tsx         # Componente principal de búsqueda
-│
-├── lib/                         # 🔧 CAPA DE APLICACIÓN
-│   ├── hooks/                   # Custom hooks
-│   │   └── use-debounce.ts      # Hook de debouncing
-│   ├── services/                # Servicios de aplicación
-│   │   ├── api.service.ts       # Servicio de APIs externas
-│   │   └── movie.service.ts     # Servicio de películas
-│   ├── env.ts                   # Variables de entorno
-│   ├── trpc-client.ts           # Cliente tRPC
-│   ├── trpc-provider.tsx        # Provider de tRPC
-│   ├── types.ts                 # Tipos TypeScript
-│   └── utils.ts                 # Utilidades generales
-│
-├── server/                      # 🖥️ BACKEND (tRPC)
-│   ├── api/routers/             # Routers de tRPC
-│   │   ├── movies.ts            # Router de películas
-│   │   └── _app.ts              # Router principal
-│   ├── context.ts               # Contexto de tRPC
-│   ├── root.ts                  # Router root (duplicado)
-│   └── trpc.ts                  # Configuración de tRPC
-│
-└── shared/                      # 🔄 CÓDIGO COMPARTIDO (Monorepo)
-    ├── constants/               # Constantes compartidas
-    │   ├── api.constants.ts     # Constantes de API
-    │   └── index.ts             # Barrel export
-    └── types/                   # Tipos compartidos
-        ├── api.types.ts         # Tipos de API
-        ├── movie.types.ts       # Tipos de películas
-        └── index.ts             # Barrel export
-```
+  ## 🌐 API externa
 
-### 🔄 Flujo de Datos Real
+  Endpoint principal:
 
-```mermaid
-graph TD
-    A[Usuario] --> B[MovieSearch Component]
-    B --> C[tRPC Hooks]
-    C --> D[tRPC Client]
-    D --> E[API Route Handler]
-    E --> F[Movies Router]
-    F --> G[MovieService]
-    G --> H[ApiService]
-    H --> I[RapidAPI/IMDb]
-    I --> J[Data Transformation]
-    J --> K[React Query Cache]
-    K --> L[UI Update]
-    L --> B
-```
+  ```http
+  GET https://imdb236.p.rapidapi.com/api/imdb/top250-movies
+  ```
 
-### 🏛️ Patrones de Diseño Implementados
+  Datos clave por película: título, año, poster, rating, votos, director, actores, géneros, duración y sinopsis. El backend transforma la respuesta a un formato estable para la UI.
 
-#### 1. **Service Layer Pattern**
-```typescript
-// apps/web/src/lib/services/movie.service.ts
-export class MovieService {
-  static transformImdbMovie(imdbMovie: any): Movie {
-    // Transformación de datos de IMDb al formato interno
-  }
-  
-  static filterMovies(movies: Movie[], filters: MovieFilters): Movie[] {
-    // Lógica de filtrado
-  }
-  
-  static extractGenres(movies: Movie[]): string[] {
-    // Extracción de géneros únicos
-  }
-}
-```
+  Para detalles técnicos y ejemplos de respuesta consulta `API_DOCUMENTATION.md`.
 
-#### 2. **API Service Pattern**
-```typescript
-// apps/web/src/lib/services/api.service.ts
-export class ApiService {
-  static async getTop250Movies() {
-    // Manejo centralizado de llamadas a RapidAPI
-  }
-  
-  static getRapidApiHeaders() {
-    // Configuración centralizada de headers
-  }
-}
-```
+  ---
 
-#### 3. **tRPC Router Pattern**
-```typescript
-// apps/web/src/server/api/routers/movies.ts
-export const moviesRouter = router({
-  getTop250: publicProcedure
-    .input(z.object({ genre: z.string().optional() }))
-    .query(async ({ input }) => {
-      // Endpoint tipado con validación
-    }),
-})
-```
+  ## 🏗️ Arquitectura (breve)
 
-#### 4. **Component Composition Pattern**
-```typescript
-// apps/web/src/components/movie-search.tsx
-export function MovieSearch() {
-  // Componente principal que coordina sub-componentes
-  return (
-    <div>
-      <SearchForm />
-      <MovieGrid />
-    </div>
-  )
-}
-```
+  - Capas: Presentación (`/components`), Aplicación (`trpc-client`), Servicios (`/lib/services`), Infraestructura (`api.service`), Datos/Tipos (`/shared`, Zod).
+  - Estructura principal de la app web: `apps/web/src/{app,components,lib,server}`.
 
-### 🔧 Separación de Responsabilidades
+  Para un diagrama completo y decisiones de diseño revisa `ARCHITECTURE.md`.
 
-#### **Capa de Presentación (Components)**
-- **Responsabilidad**: Renderizado de UI y manejo de interacciones del usuario
-- **Archivos**: `components/movie-search.tsx`, `components/movie-card.tsx`, `components/ui/*`
-- **No debe**: Contener lógica de negocio, llamadas directas a APIs, o transformación de datos
+  ---
 
-#### **Capa de Aplicación (tRPC + React Query)**
-- **Responsabilidad**: Comunicación cliente-servidor y manejo de estado
-- **Archivos**: `lib/trpc-client.ts`, `lib/trpc-provider.tsx`, `app/api/trpc/[trpc]/route.ts`
-- **No debe**: Contener lógica de negocio compleja o transformación de datos
+  ## 🔑 Configuración
 
-#### **Capa de Servicios (Business Logic)**
-- **Responsabilidad**: Lógica de negocio, transformación y filtrado de datos
-- **Archivos**: `lib/services/movie.service.ts`, `lib/services/api.service.ts`
-- **No debe**: Depender de frameworks específicos o detalles de UI
+  Crea `.env.local` en `apps/web` con estas variables mínimas:
 
-#### **Capa de Infraestructura (External APIs)**
-- **Responsabilidad**: Comunicación con servicios externos (RapidAPI/IMDb)
-- **Archivos**: `lib/services/api.service.ts`, `lib/env.ts`
-- **No debe**: Contener lógica de negocio o reglas de validación
+  ```env
+  RAPIDAPI_KEY=tu_key_aqui
+  RAPIDAPI_HOST=imdb236.p.rapidapi.com
+  RAPIDAPI_BASE_URL=https://imdb236.p.rapidapi.com/api/imdb
+  ```
 
-#### **Capa de Datos (Type Safety)**
-- **Responsabilidad**: Definición de tipos, validación y esquemas
-- **Archivos**: `lib/types.ts`, `shared/types/*`, validación con Zod
-- **No debe**: Contener lógica de negocio o implementaciones específicas
+  No subas `.env.local` al repositorio.
 
-### 🚀 Beneficios de la Nueva Arquitectura
+  ---
 
-#### **1. Mantenibilidad**
-- ✅ Código más fácil de entender y modificar
-- ✅ Cambios aislados en capas específicas
-- ✅ Menor acoplamiento entre componentes
+  ## 🧪 Tests y calidad
 
-#### **2. Testabilidad**
-- ✅ Cada capa se puede probar independientemente
-- ✅ Mocking más sencillo de dependencias
-- ✅ Tests unitarios más enfocados
+  Este repo incluye configuración y guías de testing. Para instrucciones y cómo ejecutar tests revisa `TESTING_GUIDE.md`.
 
-#### **3. Escalabilidad**
-- ✅ Fácil agregar nuevas funcionalidades
-- ✅ Reutilización de código entre capas
-- ✅ Patrones consistentes en toda la aplicación
+  ---
 
-#### **4. Flexibilidad**
-- ✅ Cambiar fuentes de datos sin afectar la lógica de negocio
-- ✅ Modificar UI sin afectar el backend
-- ✅ Agregar nuevas APIs externas fácilmente
+  ## 🚀 Deploy
 
-### 🔄 Migración Gradual
+  Deploy recomendado: Vercel. Para pasos y variables de entorno en producción, ver `DEPLOYMENT_GUIDE.md`.
 
-La nueva arquitectura se implementará de forma gradual sin romper la funcionalidad existente:
+  ---
 
-#### **Fase 1: Reorganización de Carpetas**
-- Crear nueva estructura de directorios
-- Mover archivos existentes a sus nuevas ubicaciones
-- Actualizar imports
+  ## � Documentación adicional
 
-#### **Fase 2: Extracción de Servicios**
-- Extraer lógica de negocio de routers a services
-- Crear repositories para acceso a datos
-- Implementar transformers
+  - `ARCHITECTURE.md` — arquitectura y decisiones de diseño
+  - `DEPLOYMENT_GUIDE.md` — pasos para deploy y configuración en Vercel
+  - `API_DOCUMENTATION.md` — endpoints, ejemplos de respuesta y headers
+  - `TESTING_GUIDE.md` — cómo ejecutar tests y configuración de CI
 
-#### **Fase 3: Custom Hooks**
-- Crear hooks personalizados para lógica de UI
-- Migrar componentes a usar hooks
-- Eliminar lógica duplicada
+  ---
 
-#### **Fase 4: Optimización**
-- Implementar caching avanzado
-- Optimizar transformaciones de datos
-- Mejorar manejo de errores
+  ## Estado actual
 
-### 🔧 Oportunidades de Refactoring Identificadas
+  - Arquitectura modular y tipado end-to-end
+  - UI responsiva y optimizada
+  - Caching y manejo básico de errores implementados
 
-#### **1. Extracción de Lógica de Negocio**
-**Problema Actual**: La lógica de transformación y filtrado está en el router
-```typescript
-// ❌ ANTES: Lógica en el router
-export const moviesRouter = router({
-  getTop250: publicProcedure
-    .query(async ({ input }) => {
-      // 50+ líneas de lógica de transformación aquí
-      const movies = data?.map((movie: any) => ({
-        // Transformación compleja...
-      }))
-    })
-})
-```
+  ---
 
-**Solución Propuesta**: Extraer a servicios especializados
-```typescript
-// ✅ DESPUÉS: Lógica en servicios
-class MovieService {
-  async getTop250Movies(filters?: MovieFilters): Promise<Movie[]> {
-    const rawData = await this.movieRepository.getTop250()
-    return this.movieTransformer.transformMovies(rawData, filters)
-  }
-}
+  ## 📝 Licencia
+
+  MIT License
+
+  ---
+
+  Desarrollado con foco en arquitectura clara, escalabilidad y experiencia fluida de usuario.
 ```
 
 #### **2. Centralización de Configuración de API**

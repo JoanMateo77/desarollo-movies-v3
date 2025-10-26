@@ -221,7 +221,7 @@ import { ImageWithLoading } from '@/components/ui/image-with-loading'
   className="object-cover transition-transform group-hover:scale-105"
   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
   priority={false}
-  quality={70}
+  quality={75}
   blurDataURL="data:image/jpeg;base64,..."
 />
 ```

@@ -5,12 +5,13 @@ node_modules
 .pnp
 .pnp.js
 
-# Local env files
-.env
+# Ignore env files with real secrets
 .env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.development
+.env.production
+
+# Allow the example file to be committed
+!.env.example
 
 # Testing
 coverage
