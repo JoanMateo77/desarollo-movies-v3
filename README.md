@@ -10,28 +10,33 @@
 - **Búsqueda en Tiempo Real**: Búsqueda instantánea por título, director, actores o descripción
 - **Filtros por Género**: Filtrado dinámico por género cinematográfico
 - **Información Detallada**: Datos completos de cada película incluyendo rating, director, actores, etc.
-- **Interfaz Moderna**: UI responsiva y atractiva construida con Tailwind CSS
+- **Interfaz Moderna**: UI responsiva y atractiva construida con Tailwind CSS y Radix UI
 - **Arquitectura Escalable**: Backend con tRPC y frontend con React Query
+- **Optimizaciones de Performance**: Imágenes optimizadas, lazy loading y caching inteligente
 
 ## 🔧 Stack Tecnológico
 
 ### Frontend
-- **Next.js 16** - Framework React con App Router
+- **Next.js 16** - Framework React con App Router y Turbopack
 - **React 19** - Biblioteca de UI con React Compiler
-- **TypeScript** - Tipado estático
-- **Tailwind CSS** - Framework de estilos utilitarios
-- **Radix UI** - Componentes accesibles
-- **Lucide React** - Iconografía
+- **TypeScript 5.9** - Tipado estático completo
+- **Tailwind CSS 4.1** - Framework de estilos utilitarios
+- **Radix UI** - Componentes accesibles (Dialog, Select, Label, etc.)
+- **Lucide React** - Iconografía moderna
+- **React Query (TanStack)** - Manejo de estado del servidor y caching
 
 ### Backend
-- **tRPC** - End-to-end typesafe APIs
-- **Zod** - Validación de esquemas
-- **Node.js** - Runtime de JavaScript
+- **tRPC 11.6** - End-to-end typesafe APIs
+- **Zod 4.1** - Validación de esquemas y tipos
+- **Node.js 18+** - Runtime de JavaScript
+- **SuperJSON** - Serialización de datos complejos
 
 ### Herramientas de Desarrollo
-- **ESLint** - Linting de código
+- **ESLint 9** - Linting de código
 - **PostCSS** - Procesamiento de CSS
-- **pnpm** - Gestor de paquetes
+- **pnpm 10.19** - Gestor de paquetes
+- **Turborepo** - Monorepo management
+- **Vercel Analytics** - Métricas de performance
 
 ## 🌐 API Externa: IMDb a través de RapidAPI
 
@@ -141,148 +146,152 @@ interface Movie {
 
 ### 🎯 Principios Arquitectónicos
 
-La aplicación sigue una **arquitectura en capas** con separación clara de responsabilidades:
+La aplicación sigue una **arquitectura moderna** con separación clara de responsabilidades:
 
-1. **Capa de Presentación** (UI Components) - Interfaz de usuario
-2. **Capa de Aplicación** (Hooks & Services) - Lógica de aplicación
-3. **Capa de Dominio** (Business Logic) - Reglas de negocio
-4. **Capa de Infraestructura** (External APIs) - Servicios externos
-5. **Capa de Datos** (Data Access) - Acceso y transformación de datos
+1. **Capa de Presentación** (UI Components) - Componentes React con Radix UI
+2. **Capa de Aplicación** (tRPC + React Query) - Comunicación cliente-servidor
+3. **Capa de Servicios** (Business Logic) - Lógica de negocio y transformación de datos
+4. **Capa de Infraestructura** (External APIs) - Integración con RapidAPI/IMDb
+5. **Capa de Datos** (Type Safety) - Tipos compartidos y validación con Zod
 
-### 📁 Estructura de Directorios Mejorada
+### 📁 Estructura de Directorios Real
 
 ```
 apps/web/src/
-├── app/                           # Next.js App Router
-│   ├── api/trpc/                 # Endpoints de tRPC
-│   ├── movie/[id]/               # Página de detalle de película
-│   └── page.tsx                  # Página principal
+├── app/                          # Next.js App Router
+│   ├── api/trpc/[trpc]/         # Endpoints de tRPC
+│   │   └── route.ts             # Handler de tRPC
+│   ├── movie/[id]/              # Página de detalle de película
+│   │   └── page.tsx             # Página individual de película
+│   ├── globals.css              # Estilos globales
+│   ├── layout.tsx               # Layout principal
+│   ├── loading.tsx              # Loading page
+│   └── page.tsx                 # Página principal
 │
-├── components/                    # 🎨 CAPA DE PRESENTACIÓN
-│   ├── ui/                       # Componentes base (Radix UI)
-│   ├── features/                 # Componentes por funcionalidad
-│   │   ├── movies/              # Componentes específicos de películas
-│   │   │   ├── movie-card.tsx
-│   │   │   ├── movie-search.tsx
-│   │   │   ├── movie-filters.tsx
-│   │   │   └── movie-list.tsx
-│   │   └── shared/              # Componentes compartidos
-│   │       ├── empty-state.tsx
-│   │       ├── error-state.tsx
-│   │       └── loading-skeleton.tsx
-│   └── layouts/                  # Layouts de la aplicación
+├── components/                   # 🎨 CAPA DE PRESENTACIÓN
+│   ├── ui/                      # Componentes base (Radix UI)
+│   │   ├── alert.tsx            # Componente de alertas
+│   │   ├── badge.tsx            # Badges y etiquetas
+│   │   ├── button.tsx           # Botones
+│   │   ├── card.tsx             # Tarjetas
+│   │   ├── dialog.tsx           # Modales
+│   │   ├── image-with-loading.tsx # Imagen con loading state
+│   │   ├── input.tsx            # Inputs de formulario
+│   │   ├── label.tsx            # Labels
+│   │   ├── select.tsx           # Selectores
+│   │   ├── separator.tsx        # Separadores
+│   │   └── skeleton.tsx         # Loading skeletons
+│   ├── empty-state.tsx          # Estado vacío
+│   ├── error-state.tsx          # Estado de error
+│   ├── movie-card.tsx           # Tarjeta de película
+│   ├── movie-card-skeleton.tsx  # Skeleton de tarjeta
+│   └── movie-search.tsx         # Componente principal de búsqueda
 │
-├── lib/                          # 🔧 CAPA DE APLICACIÓN
-│   ├── hooks/                    # Custom hooks
-│   │   ├── use-movies.ts        # Hook para lógica de películas
-│   │   ├── use-search.ts        # Hook para búsqueda
+├── lib/                         # 🔧 CAPA DE APLICACIÓN
+│   ├── hooks/                   # Custom hooks
 │   │   └── use-debounce.ts      # Hook de debouncing
-│   ├── services/                 # Servicios de aplicación
-│   │   ├── movie.service.ts     # Servicio de películas
-│   │   ├── search.service.ts    # Servicio de búsqueda
-│   │   └── cache.service.ts     # Servicio de caché
-│   ├── utils/                    # Utilidades generales
-│   │   ├── formatters.ts        # Formateo de datos
-│   │   ├── validators.ts        # Validaciones
-│   │   └── constants.ts         # Constantes
-│   ├── config/                   # Configuración
-│   │   ├── env.ts              # Variables de entorno
-│   │   └── api.config.ts       # Configuración de APIs
-│   └── types/                    # Tipos TypeScript
-│       ├── movie.types.ts       # Tipos de películas
-│       ├── api.types.ts         # Tipos de API
-│       └── common.types.ts      # Tipos comunes
+│   ├── services/                # Servicios de aplicación
+│   │   ├── api.service.ts       # Servicio de APIs externas
+│   │   └── movie.service.ts     # Servicio de películas
+│   ├── env.ts                   # Variables de entorno
+│   ├── trpc-client.ts           # Cliente tRPC
+│   ├── trpc-provider.tsx        # Provider de tRPC
+│   ├── types.ts                 # Tipos TypeScript
+│   └── utils.ts                 # Utilidades generales
 │
-├── server/                       # 🖥️ BACKEND (tRPC)
-│   ├── api/                      # API Layer
-│   │   ├── routers/             # Routers de tRPC
-│   │   │   ├── movies.router.ts
-│   │   │   └── _app.ts
-│   │   └── middleware/           # Middleware personalizado
-│   ├── services/                 # 🏢 CAPA DE DOMINIO
-│   │   ├── movie.service.ts     # Lógica de negocio de películas
-│   │   ├── search.service.ts    # Lógica de búsqueda
-│   │   └── genre.service.ts     # Lógica de géneros
-│   ├── repositories/             # 🗄️ CAPA DE DATOS
-│   │   ├── movie.repository.ts  # Acceso a datos de películas
-│   │   └── external-api.repository.ts # Acceso a APIs externas
-│   ├── transformers/             # Transformadores de datos
-│   │   ├── movie.transformer.ts # Transformación de películas
-│   │   └── api.transformer.ts   # Transformación de APIs
-│   ├── validators/               # Validadores de entrada
-│   │   ├── movie.validators.ts
-│   │   └── search.validators.ts
-│   └── config/                   # Configuración del servidor
-│       ├── trpc.ts
-│       └── context.ts
+├── server/                      # 🖥️ BACKEND (tRPC)
+│   ├── api/routers/             # Routers de tRPC
+│   │   ├── movies.ts            # Router de películas
+│   │   └── _app.ts              # Router principal
+│   ├── context.ts               # Contexto de tRPC
+│   ├── root.ts                  # Router root (duplicado)
+│   └── trpc.ts                  # Configuración de tRPC
 │
-└── shared/                       # 🔄 CÓDIGO COMPARTIDO
-    ├── types/                    # Tipos compartidos
-    ├── constants/                # Constantes compartidas
-    └── utils/                    # Utilidades compartidas
+└── shared/                      # 🔄 CÓDIGO COMPARTIDO (Monorepo)
+    ├── constants/               # Constantes compartidas
+    │   ├── api.constants.ts     # Constantes de API
+    │   └── index.ts             # Barrel export
+    └── types/                   # Tipos compartidos
+        ├── api.types.ts         # Tipos de API
+        ├── movie.types.ts       # Tipos de películas
+        └── index.ts             # Barrel export
 ```
 
-### 🔄 Flujo de Datos Mejorado
+### 🔄 Flujo de Datos Real
 
 ```mermaid
 graph TD
-    A[Usuario] --> B[Componente UI]
-    B --> C[Custom Hook]
+    A[Usuario] --> B[MovieSearch Component]
+    B --> C[tRPC Hooks]
     C --> D[tRPC Client]
-    D --> E[tRPC Router]
-    E --> F[Service Layer]
-    F --> G[Repository Layer]
-    G --> H[External API]
-    H --> I[Data Transformer]
-    I --> J[Cache Layer]
-    J --> K[Response]
-    K --> L[Componente UI]
+    D --> E[API Route Handler]
+    E --> F[Movies Router]
+    F --> G[MovieService]
+    G --> H[ApiService]
+    H --> I[RapidAPI/IMDb]
+    I --> J[Data Transformation]
+    J --> K[React Query Cache]
+    K --> L[UI Update]
+    L --> B
 ```
 
 ### 🏛️ Patrones de Diseño Implementados
 
-#### 1. **Repository Pattern**
+#### 1. **Service Layer Pattern**
 ```typescript
-// apps/web/src/server/repositories/movie.repository.ts
-interface MovieRepository {
-  getTop250(filters?: MovieFilters): Promise<Movie[]>
-  getById(id: string): Promise<Movie | null>
-  search(query: string, filters?: MovieFilters): Promise<Movie[]>
-  getGenres(): Promise<string[]>
-}
-```
-
-#### 2. **Service Layer Pattern**
-```typescript
-// apps/web/src/server/services/movie.service.ts
-class MovieService {
-  constructor(
-    private movieRepository: MovieRepository,
-    private cacheService: CacheService
-  ) {}
+// apps/web/src/lib/services/movie.service.ts
+export class MovieService {
+  static transformImdbMovie(imdbMovie: any): Movie {
+    // Transformación de datos de IMDb al formato interno
+  }
   
-  async getTop250Movies(filters?: MovieFilters): Promise<Movie[]> {
-    // Lógica de negocio aquí
+  static filterMovies(movies: Movie[], filters: MovieFilters): Movie[] {
+    // Lógica de filtrado
+  }
+  
+  static extractGenres(movies: Movie[]): string[] {
+    // Extracción de géneros únicos
   }
 }
 ```
 
-#### 3. **Transformer Pattern**
+#### 2. **API Service Pattern**
 ```typescript
-// apps/web/src/server/transformers/movie.transformer.ts
-class MovieTransformer {
-  static fromImdbApi(imdbMovie: ImdbMovie): Movie {
-    // Transformación de datos
+// apps/web/src/lib/services/api.service.ts
+export class ApiService {
+  static async getTop250Movies() {
+    // Manejo centralizado de llamadas a RapidAPI
+  }
+  
+  static getRapidApiHeaders() {
+    // Configuración centralizada de headers
   }
 }
 ```
 
-#### 4. **Custom Hooks Pattern**
+#### 3. **tRPC Router Pattern**
 ```typescript
-// apps/web/src/lib/hooks/use-movies.ts
-export function useMovies() {
-  // Lógica de estado y efectos
-  return { movies, loading, error, refetch }
+// apps/web/src/server/api/routers/movies.ts
+export const moviesRouter = router({
+  getTop250: publicProcedure
+    .input(z.object({ genre: z.string().optional() }))
+    .query(async ({ input }) => {
+      // Endpoint tipado con validación
+    }),
+})
+```
+
+#### 4. **Component Composition Pattern**
+```typescript
+// apps/web/src/components/movie-search.tsx
+export function MovieSearch() {
+  // Componente principal que coordina sub-componentes
+  return (
+    <div>
+      <SearchForm />
+      <MovieGrid />
+    </div>
+  )
 }
 ```
 
@@ -290,28 +299,28 @@ export function useMovies() {
 
 #### **Capa de Presentación (Components)**
 - **Responsabilidad**: Renderizado de UI y manejo de interacciones del usuario
+- **Archivos**: `components/movie-search.tsx`, `components/movie-card.tsx`, `components/ui/*`
 - **No debe**: Contener lógica de negocio, llamadas directas a APIs, o transformación de datos
-- **Ejemplo**: `MovieCard`, `MovieSearch`, `MovieFilters`
 
-#### **Capa de Aplicación (Hooks & Services)**
-- **Responsabilidad**: Coordinación entre UI y lógica de negocio
-- **No debe**: Contener lógica de negocio compleja o acceso directo a datos
-- **Ejemplo**: `useMovies`, `useSearch`, `MovieService`
+#### **Capa de Aplicación (tRPC + React Query)**
+- **Responsabilidad**: Comunicación cliente-servidor y manejo de estado
+- **Archivos**: `lib/trpc-client.ts`, `lib/trpc-provider.tsx`, `app/api/trpc/[trpc]/route.ts`
+- **No debe**: Contener lógica de negocio compleja o transformación de datos
 
-#### **Capa de Dominio (Business Logic)**
-- **Responsabilidad**: Reglas de negocio, validaciones, y lógica específica del dominio
-- **No debe**: Depender de frameworks específicos o detalles de implementación
-- **Ejemplo**: `MovieService`, `SearchService`, `GenreService`
+#### **Capa de Servicios (Business Logic)**
+- **Responsabilidad**: Lógica de negocio, transformación y filtrado de datos
+- **Archivos**: `lib/services/movie.service.ts`, `lib/services/api.service.ts`
+- **No debe**: Depender de frameworks específicos o detalles de UI
 
 #### **Capa de Infraestructura (External APIs)**
-- **Responsabilidad**: Comunicación con servicios externos y persistencia de datos
+- **Responsabilidad**: Comunicación con servicios externos (RapidAPI/IMDb)
+- **Archivos**: `lib/services/api.service.ts`, `lib/env.ts`
 - **No debe**: Contener lógica de negocio o reglas de validación
-- **Ejemplo**: `MovieRepository`, `ExternalApiRepository`
 
-#### **Capa de Datos (Data Access)**
-- **Responsabilidad**: Acceso, transformación y mapeo de datos
-- **No debe**: Contener lógica de negocio o reglas de validación
-- **Ejemplo**: `MovieTransformer`, `ApiTransformer`
+#### **Capa de Datos (Type Safety)**
+- **Responsabilidad**: Definición de tipos, validación y esquemas
+- **Archivos**: `lib/types.ts`, `shared/types/*`, validación con Zod
+- **No debe**: Contener lógica de negocio o implementaciones específicas
 
 ### 🚀 Beneficios de la Nueva Arquitectura
 
@@ -551,22 +560,32 @@ pnpm build
 ### 1. Búsqueda de Películas
 - **Búsqueda en Tiempo Real**: Filtrado instantáneo mientras el usuario escribe
 - **Múltiples Campos**: Búsqueda por título, director, actores o descripción
-- **Debouncing**: Optimización para evitar llamadas excesivas a la API
+- **Filtrado del Cliente**: Búsqueda optimizada sin llamadas adicionales a la API
+- **Debouncing**: Hook `use-debounce.ts` para optimizar rendimiento
 
 ### 2. Filtrado por Género
-- **Géneros Dinámicos**: Lista de géneros extraída automáticamente de los datos
+- **Géneros Dinámicos**: Lista extraída automáticamente de los datos de IMDb
 - **Filtrado Combinado**: Funciona junto con la búsqueda de texto
-- **UI Intuitiva**: Selector desplegable con iconografía clara
+- **UI Intuitiva**: Selector Radix UI con iconografía Lucide React
+- **Estado Persistente**: Mantiene filtros durante la sesión
 
 ### 3. Visualización de Datos
-- **Cards Responsivas**: Diseño adaptativo para diferentes tamaños de pantalla
-- **Información Completa**: Muestra rating, año, director y poster
-- **Estados de Carga**: Skeletons y estados de error para mejor UX
+- **Cards Responsivas**: Diseño adaptativo con Tailwind CSS
+- **Información Completa**: Rating, año, director, poster y tipo
+- **Estados de Carga**: Skeletons personalizados para mejor UX
+- **Imágenes Optimizadas**: Componente `ImageWithLoading` con lazy loading
 
 ### 4. Detalles de Película
-- **Página Individual**: Vista detallada de cada película
-- **Información Extendida**: Todos los metadatos disponibles
-- **Navegación Fluida**: Enlaces entre películas relacionadas
+- **Página Individual**: Vista detallada en `/movie/[id]`
+- **Información Extendida**: Plot, director, actores, géneros, metadatos
+- **Navegación Fluida**: Botón de volver y enlaces internos
+- **Loading States**: Skeleton completo para la página de detalle
+
+### 5. Optimizaciones de Performance
+- **React Query**: Caching inteligente y sincronización de estado
+- **Next.js Image**: Optimización automática de imágenes
+- **Turbopack**: Compilación más rápida en desarrollo
+- **Bundle Splitting**: Carga eficiente de código
 
 ## 🔧 Configuración de la API
 
@@ -575,62 +594,93 @@ pnpm build
 La aplicación utiliza RapidAPI para acceder a los datos de IMDb:
 
 ```typescript
-const headers = {
-  "x-rapidapi-key": process.env.RAPIDAPI_KEY,
-  "x-rapidapi-host": process.env.RAPIDAPI_HOST,
-};
+// lib/services/api.service.ts
+static getRapidApiHeaders() {
+  return {
+    "x-rapidapi-key": serverEnv.RAPIDAPI_KEY,
+    "x-rapidapi-host": serverEnv.RAPIDAPI_HOST,
+  }
+}
+```
+
+### Variables de Entorno
+
+```env
+# apps/web/.env.local
+RAPIDAPI_KEY=tu_rapidapi_key_aqui
+RAPIDAPI_HOST=imdb236.p.rapidapi.com
+RAPIDAPI_BASE_URL=https://imdb236.p.rapidapi.com/api/imdb
 ```
 
 ### Rate Limiting
 
-- **Caching**: 1 hora para datos de películas (estáticos)
 - **Manejo de Errores**: Gestión específica de errores 429 (rate limit)
-- **Retry Logic**: Reintentos automáticos en caso de fallos temporales
+- **Retry Logic**: Configurado en React Query con 1 reintento
+- **Error Handling**: Mensajes de error amigables para el usuario
 
 ### Transformación de Datos
 
-Los datos de la API se transforman para mantener consistencia:
+Los datos de la API se transforman usando `MovieService`:
 
 ```typescript
-const transformedMovie = {
-  id: movie.id,
-  title: movie.primaryTitle,
-  year: movie.startYear?.toString(),
-  poster: movie.primaryImage,
-  // ... más campos transformados
-};
+// lib/services/movie.service.ts
+static transformImdbMovie(imdbMovie: any): Movie {
+  return {
+    id: imdbMovie.id,
+    title: imdbMovie.primaryTitle || '',
+    year: imdbMovie.startYear?.toString(),
+    poster: imdbMovie.primaryImage,
+    // ... más campos transformados
+  }
+}
 ```
 
 ## 🎨 Diseño y UX
 
 ### Principios de Diseño
 
-1. **Mobile First**: Diseño responsivo que funciona en todos los dispositivos
+1. **Mobile First**: Diseño responsivo con Tailwind CSS que funciona en todos los dispositivos
 2. **Accesibilidad**: Componentes Radix UI con soporte completo de accesibilidad
-3. **Performance**: Carga rápida y navegación fluida
-4. **Consistencia**: Sistema de diseño unificado con Tailwind CSS
+3. **Performance**: Carga rápida con Next.js Image y React Query
+4. **Consistencia**: Sistema de diseño unificado con Tailwind CSS y Radix UI
 
-### Componentes UI
+### Componentes UI Implementados
 
-- **MovieCard**: Tarjeta individual de película con información esencial
-- **MovieSearch**: Componente principal de búsqueda y filtrado
-- **EmptyState**: Estado vacío cuando no hay resultados
+- **MovieCard**: Tarjeta individual con poster, título, año y tipo
+- **MovieSearch**: Componente principal con búsqueda y filtros
+- **EmptyState**: Estado vacío con mensaje amigable y acción de limpiar
 - **ErrorState**: Manejo de errores con opción de reintento
-- **LoadingSkeleton**: Estados de carga para mejor UX
+- **MovieCardSkeleton**: Loading skeleton para tarjetas
+- **ImageWithLoading**: Componente de imagen con loading state
+- **SearchForm**: Formulario de búsqueda reutilizable
+
+### Estados de la Aplicación
+
+- **Loading**: Skeletons y spinners durante la carga
+- **Error**: Mensajes de error claros con opción de reintento
+- **Empty**: Estado vacío cuando no hay resultados
+- **Success**: Visualización de datos con transiciones suaves
 
 ## 🔍 Optimizaciones Implementadas
 
 ### Frontend
-- **React Query**: Caching inteligente y sincronización de estado
-- **Debouncing**: Búsqueda optimizada para evitar llamadas excesivas
-- **Lazy Loading**: Carga diferida de componentes pesados
-- **Image Optimization**: Optimización automática de imágenes con Next.js
+- **React Query**: Caching inteligente con `staleTime: 60s` y `refetchOnWindowFocus: false`
+- **Debouncing**: Hook `use-debounce.ts` para búsqueda optimizada
+- **Next.js Image**: Optimización automática con WebP/AVIF y lazy loading
+- **Turbopack**: Compilación más rápida en desarrollo
+- **Bundle Splitting**: Optimización automática de chunks
 
 ### Backend
-- **tRPC**: Type-safe APIs con validación automática
-- **Zod Schemas**: Validación robusta de datos de entrada y salida
-- **Error Handling**: Manejo centralizado de errores con códigos específicos
-- **Caching Strategy**: Estrategia de cache basada en la naturaleza de los datos
+- **tRPC**: Type-safe APIs con validación automática de entrada y salida
+- **Zod Schemas**: Validación robusta en `lib/types.ts`
+- **Error Handling**: Manejo centralizado con códigos específicos (429, 404, 500)
+- **Service Layer**: Separación clara entre lógica de negocio y acceso a datos
+
+### Performance
+- **Image Optimization**: Componente `ImageWithLoading` con loading states
+- **Skeleton Loading**: Estados de carga para mejor percepción de velocidad
+- **React Compiler**: Optimizaciones automáticas de React
+- **Console Removal**: Eliminación de console.log en producción
 
 ## 🚀 Despliegue
 
@@ -640,16 +690,42 @@ const transformedMovie = {
 # Instalar Vercel CLI
 npm i -g vercel
 
-# Desplegar
+# Desplegar desde la raíz del proyecto
+vercel --prod
+
+# O desde apps/web
+cd apps/web
 vercel --prod
 ```
 
 ### Variables de Entorno en Producción
 
 Configurar en el dashboard de Vercel:
-- `RAPIDAPI_KEY`
-- `RAPIDAPI_HOST`
-- `RAPIDAPI_BASE_URL`
+- `RAPIDAPI_KEY`: Tu clave de RapidAPI
+- `RAPIDAPI_HOST`: `imdb236.p.rapidapi.com`
+- `RAPIDAPI_BASE_URL`: `https://imdb236.p.rapidapi.com/api/imdb` (opcional)
+
+### Configuración de Build
+
+```json
+// package.json scripts
+{
+  "dev": "next dev",
+  "build": "next build",
+  "start": "next start",
+  "lint": "eslint"
+}
+```
+
+### Monorepo con Turborepo
+
+```bash
+# Build completo del monorepo
+pnpm build
+
+# Solo la aplicación web
+cd apps/web && pnpm build
+```
 
 ## 📊 Métricas y Monitoreo
 

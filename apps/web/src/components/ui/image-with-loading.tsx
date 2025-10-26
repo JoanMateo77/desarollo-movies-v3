@@ -3,6 +3,13 @@
  * 
  * Componente optimizado que muestra un loading state mientras carga la imagen
  * y maneja errores de carga de forma elegante.
+ * 
+ * ARQUITECTURA: Componente wrapper sobre Next.js Image con estados adicionales.
+ * JUSTIFICACIÓN: Next.js Image no proporciona loading states nativos, este componente:
+ * - Mejora la UX con feedback visual inmediato
+ * - Maneja errores de carga de forma elegante
+ * - Mantiene todas las optimizaciones de Next.js Image
+ * - Proporciona fallbacks consistentes
  */
 
 "use client"
@@ -43,20 +50,23 @@ export function ImageWithLoading({
   onLoad,
   onError,
 }: ImageWithLoadingProps) {
+  // ESTADO LOCAL: Control de loading y error states
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
 
+  // HANDLERS: Callbacks para eventos de imagen
   const handleLoad = () => {
     setLoading(false)
-    onLoad?.()
+    onLoad?.() // Callback opcional del padre
   }
 
   const handleError = () => {
     setLoading(false)
     setError(true)
-    onError?.()
+    onError?.() // Callback opcional del padre
   }
 
+  // FALLBACK: Estado de error con icono genérico
   if (error) {
     return (
       <div className={cn(
@@ -71,13 +81,14 @@ export function ImageWithLoading({
 
   return (
     <div className={cn("relative", fill ? "size-full" : "", className)}>
-      {/* Loading state */}
+      {/* LOADING STATE: Spinner mientras carga la imagen */}
       {loading && (
         <div className="absolute inset-0 flex items-center justify-center bg-muted">
           <Loader2 className="size-8 animate-spin text-muted-foreground" />
         </div>
       )}
       
+      {/* NEXT.JS IMAGE: Con todas las optimizaciones habilitadas */}
       <Image
         src={src}
         alt={alt}
@@ -86,16 +97,17 @@ export function ImageWithLoading({
         height={fill ? undefined : height}
         className={cn(
           "object-cover transition-all duration-300",
-          loading ? "opacity-0" : "opacity-100"
+          loading ? "opacity-0" : "opacity-100" // Fade in cuando termina de cargar
         )}
-        priority={priority}
-        quality={quality}
-        sizes={sizes}
-        placeholder={placeholder}
-        blurDataURL={blurDataURL}
+        priority={priority} // Para imágenes above-the-fold
+        quality={quality} // Balance entre calidad y tamaño
+        sizes={sizes} // Responsive images
+        placeholder={placeholder} // Blur placeholder
+        blurDataURL={blurDataURL} // Base64 para blur
         onLoad={handleLoad}
         onError={handleError}
       />
     </div>
   )
 }
+

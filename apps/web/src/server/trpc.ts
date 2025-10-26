@@ -1,19 +1,11 @@
 /**
- * apps/web/src/server/trpc.ts
  * tRPC Configuration
  *
  * Configuración base de tRPC para crear una API tipada end-to-end.
  * Define el contexto, middleware y utilidades para crear routers.
  *
- * VENTAJA: Type-safety completo entre cliente y servidor sin código duplicado.
- */
-/**
- * apps/web/src/server/trpc.ts
- * tRPC Configuration
- *
- * Configuración base de tRPC para crear una API tipada end-to-end.
- * Define el contexto, middleware y utilidades para crear routers.
- *
+ * ARQUITECTURA: Configuración centralizada de tRPC.
+ * JUSTIFICACIÓN: tRPC proporciona type-safety end-to-end y validación automática.
  * VENTAJA: Type-safety completo entre cliente y servidor sin código duplicado.
  */
 
@@ -22,50 +14,54 @@ import { ZodError } from "zod"
 import superjson from "superjson"
 import type { Context } from "@/server/context"
 
-
 /**
- * Contexto de tRPC
- * Información disponible en todos los procedimientos (queries/mutations)
+ * Inicialización de tRPC con configuración optimizada
+ * 
+ * TRANSFORMER: SuperJSON para serializar tipos complejos (Date, Map, Set, etc.)
+ * ERROR FORMATTER: Formato personalizado que incluye detalles de validación Zod
  */
-// interface Context {
-//   // Aquí se pueden agregar: usuario autenticado, headers, etc.
-//   headers?: Headers
-// }
-
 const t = initTRPC.context<Context>().create({
-  // SuperJSON permite serializar Date, Map, Set, etc.
+  // TRANSFORMER: Permite serializar tipos complejos entre cliente y servidor
+  // VENTAJA: Date, Map, Set, BigInt, etc. se serializan correctamente
   transformer: superjson,
 
+  // ERROR FORMATTER: Formato personalizado para errores más informativos
   errorFormatter({ shape, error }) {
     return {
       ...shape,
       data: {
         ...shape.data,
-        // Incluir detalles de validación de Zod
+        // Incluir detalles de validación de Zod para debugging
         zodError: error.cause instanceof ZodError ? error.cause.flatten() : null,
       },
     }
   },
 })
 
+// EXPORTS: Procedimientos y utilidades de tRPC
 export const router = t.router
 export const publicProcedure = t.procedure
 
 /**
- * Middleware de logging (opcional pero útil para debugging)
- * Registra todas las llamadas a la API con timing
+ * Middleware de logging para debugging y monitoreo
+ * 
+ * FUNCIONALIDAD: Registra tiempo de ejecución de cada procedimiento.
+ * VENTAJA: Facilita debugging y monitoreo de performance.
+ * USO: Aplicar a procedimientos que necesiten logging detallado.
  */
 export const loggerMiddleware = t.middleware(async ({ path, type, next }) => {
   const start = Date.now()
   const result = await next()
   const duration = Date.now() - start
 
+  // Log estructurado para fácil parsing
   console.log(`[tRPC] ${type} ${path} - ${duration}ms`)
 
   return result
 })
 
+// Procedimiento con logging automático
 export const loggedProcedure = publicProcedure.use(loggerMiddleware)
 
-// Exporta los helpers que usarás en tus routers
+// Helper para crear routers (alias para consistencia)
 export const createTRPCRouter = t.router

@@ -64,3 +64,4 @@ export const ERROR_CODES = {
   NOT_FOUND_ERROR: 'NOT_FOUND_ERROR',
   INTERNAL_ERROR: 'INTERNAL_ERROR',
 } as const
+

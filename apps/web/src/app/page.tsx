@@ -19,8 +19,7 @@ return (
 <header className="mb-8">
 <h1 className="mb-2 text-4xl font-bold text-balance">Explorador de Películas de iMBD</h1>
 <p className="text-lg text-muted-foreground text-pretty">
-Busca y descubre información las 250 mejores peliculas segun iMBD y miralas todas en familia
-</p>
+Busca y descubre las 250 mejores películas según IMDb, y disfrútalas en familia.</p>
 </header>
 
 {/* Componente principal de búsqueda */}

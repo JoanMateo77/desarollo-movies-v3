@@ -6,6 +6,13 @@
  *
  * RESPONSABILIDAD: UI de búsqueda y coordinación de estado.
  * INTERACCIÓN: Usa tRPC hooks para comunicarse con el backend.
+ * 
+ * ARQUITECTURA: Componente contenedor que coordina múltiples sub-componentes.
+ * JUSTIFICACIÓN: Separar la lógica de búsqueda en un componente dedicado permite:
+ * - Reutilización en diferentes páginas
+ * - Testing independiente de la lógica de búsqueda
+ * - Mantenimiento más fácil del estado complejo
+ * - Separación clara de responsabilidades
  */
 
 // apps/web/src/components/movie-search.tsx
@@ -23,22 +30,25 @@ import { ErrorState } from "./error-state"
 import { trpc } from "@/lib/trpc-client"
 
 export function MovieSearch() {
+  // ESTADO LOCAL: Manejo de búsqueda y filtros en el cliente
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedGenre, setSelectedGenre] = useState<string>("all")
   const [filteredMovies, setFilteredMovies] = useState<any[]>([])
 
-  // ✅ Obtener Top 250 películas
+  // TPRC QUERIES: Comunicación con el backend usando React Query
+  // ✅ Obtener Top 250 películas - Query principal con caching automático
   const { data: top250Data, isLoading: isLoadingTop250, error: top250Error } = trpc.movies.getTop250.useQuery({})
   
-  // ✅ Obtener géneros disponibles
+  // ✅ Obtener géneros disponibles - Query independiente para el selector
   const { data: genres, isLoading: isLoadingGenres } = trpc.movies.getGenres.useQuery()
 
+  // FILTRADO LOCAL: Estrategia de performance para mejor UX
   // ✅ Filtrar películas por búsqueda y género
   useEffect(() => {
     if (top250Data?.movies) {
       let filtered = top250Data.movies
 
-      // Filtrar por búsqueda de texto
+      // FILTRO DE BÚSQUEDA: Búsqueda en múltiples campos
       if (searchQuery.trim()) {
         filtered = filtered.filter((movie: any) =>
           movie.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -48,7 +58,7 @@ export function MovieSearch() {
         )
       }
 
-      // Filtrar por género
+      // FILTRO DE GÉNERO: Búsqueda parcial en string de géneros
       if (selectedGenre !== "all") {
         filtered = filtered.filter((movie: any) =>
           movie.genre?.toLowerCase().includes(selectedGenre.toLowerCase())
