@@ -39,6 +39,14 @@ export const movieSchema = z.object({
 
 export type Movie = z.infer<typeof movieSchema>
 
+// ✅ NUEVO: Tipos para filtros
+export interface MovieFilters {
+  genre?: string
+  year?: string
+  rating?: number
+  search?: string
+}
+
 // ✅ NUEVO: Esquemas para Top 250
 export const getTop250InputSchema = z.object({
   genre: z.string().optional(),

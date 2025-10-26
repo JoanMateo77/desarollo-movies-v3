@@ -11,10 +11,10 @@
 
 "use client"
 
-import { use } from "react"
+import { use, useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { ArrowLeft, Calendar, Clock, Film, Star, Users } from "lucide-react"
+import { ArrowLeft, Calendar, Clock, Film, Star, Users, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -29,6 +29,8 @@ import { ErrorState } from "@/components/error-state"
 
 export default function MovieDetailPage({ params }: MovieDetailPageProps) {
   const { id } = use(params)
+  const [imageLoading, setImageLoading] = useState(true)
+  const [imageError, setImageError] = useState(false)
 
   const {
     data: movie,
@@ -73,22 +75,40 @@ export default function MovieDetailPage({ params }: MovieDetailPageProps) {
 
       <div className="grid gap-8 lg:grid-cols-[300px_1fr]">
         {/* Poster */}
-       <div className="relative lg:top-8 lg:self-start lg:col-span-1 aspect-[2/3] overflow-hidden rounded-lg bg-muted">
-            {movie.poster ? (
+        <div className="relative lg:top-8 lg:self-start lg:col-span-1 aspect-[2/3] overflow-hidden rounded-lg bg-muted">
+          {movie.poster && !imageError ? (
+            <>
+              {/* Loading state */}
+              {imageLoading && (
+                <div className="absolute inset-0 flex items-center justify-center bg-muted">
+                  <Loader2 className="size-12 animate-spin text-muted-foreground" />
+                </div>
+              )}
+              
               <Image
-                src={movie.poster || "/placeholder.svg"}
+                src={movie.poster}
                 alt={movie.title}
                 fill
-                className="object-cover"
+                className={`object-cover transition-all duration-300 ${
+                  imageLoading ? 'opacity-0' : 'opacity-100'
+                }`}
                 priority
-                
+                quality={75}
+                placeholder="blur"
+                blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k="
                 sizes="(max-width: 1024px) 100vw, 300px"
+                onLoad={() => setImageLoading(false)}
+                onError={() => {
+                  setImageLoading(false)
+                  setImageError(true)
+                }}
               />
-                ) : (
-              <div className="flex size-full items-center justify-center">
-                <Film className="size-24 text-muted-foreground" />
-              </div>
-            )}
+            </>
+          ) : (
+            <div className="flex size-full items-center justify-center">
+              <Film className="size-24 text-muted-foreground" />
+            </div>
+          )}
         </div>
 
 
