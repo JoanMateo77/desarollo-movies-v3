@@ -2,7 +2,7 @@
  * Script de Verificación de Tests
  * 
  * Script para verificar que los tests del router tRPC funcionan correctamente.
- * Ejecutar con: node verify-tests.js
+ * Ejecutar desde la raíz con: node scripts/verify-tests.js
  */
 
 const { execSync } = require('child_process')
@@ -12,7 +12,7 @@ console.log('🧪 Verificando Tests del Router tRPC...\n')
 
 try {
   // Cambiar al directorio de la aplicación web
-  process.chdir(path.join(__dirname, 'apps', 'web'))
+  process.chdir(path.join(__dirname, '..', 'apps', 'web'))
   
   console.log('📦 Instalando dependencias de testing...')
   execSync('pnpm install', { stdio: 'inherit' })
